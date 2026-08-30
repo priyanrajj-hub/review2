@@ -1,33 +1,25 @@
-# Methodology: Cross-Morphology Microwave Dielectric Sensing
+# Methodology: Physics-Driven Capacitive Leaf Sensing
 
-## 1. Introduction to the Methodology
+## 1. The Physics Chain of Dielectric Sensing
 
-Our approach replaces traditional, laboratory-bound Terahertz Time-Domain Spectroscopy (THz-TDS) with a field-deployable, sub-THz electromagnetic method. The system leverages Vector Network Analysis (VNA) and interdigitated capacitive sensing to measure the electrical impedance of a leaf in-vivo. Since the relative permittivity of water ($\epsilon_r \approx 80$) is massively higher than dry plant material ($\epsilon_r \approx 2-3$), any fluctuation in Leaf Water Content (LWC) dominates the macroscopic dielectric signature of the leaf.
+Our methodology relies on the fundamental relationship between volumetric water content and the bulk dielectric constant ($\epsilon_{mix}$) of a biological medium. We do not merely correlate "capacitance to stress"; we follow a strict physical chain:
 
-## 2. Sensor Design and Hardware Configuration (60% Implementation)
+**Step 1: Volumetric Water Content → Dielectric Permittivity**
+Water is a highly polar molecule with a relative permittivity ($\epsilon_r$) of ~80 at ambient temperature. Dry plant tissue (cellulose, lignin) has an $\epsilon_r$ of roughly 2 to 3. According to the **Complex Refractive Index Method (CRIM)** or **Debye Relaxation Models** for biological mixtures, the bulk effective permittivity of the leaf is overwhelmingly dominated by the volume fraction of free water. As the leaf loses turgor pressure and dehydrates, the bulk $\epsilon_r$ drops non-linearly.
 
-The hardware architecture is predicated on generating radio frequency (RF) sweeps across the leaf tissue without puncturing the epidermis.
+**Step 2: Dielectric Permittivity → Resolvable Capacitance (FDC1004)**
+The sensor applies a low-frequency (e.g., 25 kHz for FDC1004) alternating electric field across interdigitated electrodes. The capacitance $C$ of an interdigitated structure is given approximately by the conformal mapping of the substrate and the superstrate (the leaf).
+$$ C = f(Geometry) \cdot \epsilon_0 \cdot \epsilon_{effective} $$
+Because the FDC1004 has an extreme resolution of **0.5 fF (femtofarads)** with an input range up to ±15 pF, it is mathematically capable of resolving the minute changes in the fringing electric field caused by an $\epsilon_r$ shift of even 1-2%, corresponding directly to early-stage drought stress before mechanical wilting occurs.
 
-- **Microwave Circuit**: We utilize a NanoVNA-based S-parameter sweep from 500 MHz to 3 GHz. The sensor head acts as a parallel-plate or coplanar resonator.
-- **Capacitive Base**: An LDC161x or FDC1004 capacitive-to-digital converter measures the raw bulk capacitance at sub-MHz frequencies.
-- **Environmental Encapsulation**: A core novelty is the application of a thin Parylene-C conformal coating over the copper electrodes. This yields a weatherproof barrier against morning dew, shifting the baseline impedance but preventing electrode corrosion.
+## 2. Sensor Geometry and Physics Modifications
 
-## 3. Cross-Morphology Calibration
+- **Parylene-C Conformal Coating**: Directly exposing copper to the leaf surface introduces galvanic corrosion and massive measurement errors from conductive sap/dew. We coat the electrodes in Parylene-C ($\epsilon_r = 3.1$). This acts as a rigid series capacitor ($C_{coating}$). The total measured capacitance is $\frac{1}{C_{total}} = \frac{1}{C_{coating}} + \frac{1}{C_{leaf}}$. The high sensitivity of the FDC1004 is required to read through this series impedance block.
+- **Probe Geometry for Specific Morphologies**:
+  - **Tomato/Chilli**: Soft cuticles allow the fringing field (which decays exponentially with distance) to easily penetrate the water-bearing mesophyll. A soft clamp suffices.
+  - **Coconut**: The thick, waxy cuticle physically acts as a massive dielectric spacer, pushing the water-bearing layers further from the electrodes into the weaker regions of the fringing field. This explains why standard grass/wheat capacitance matrices utterly fail on coconut, mandating our cross-morphology ML compensation to adjust the baseline sensitivity curve.
 
-Traditional capacitive sensors are calibrated strictly for thin grasses (e.g., wheat, maize). We extend this to structurally complex crops:
+## 3. Machine Learning Compensation
 
-- **Tomato & Chilli**: These represent 'soft' morphology with high surface transpiration. They require a soft-clamping mechanism (pressure < 0.5 N) to avoid crushing the xylem.
-- **Coconut**: Represents 'fibrous/waxy' morphology. The thick cuticle acts as a large series dielectric, drastically damping the capacitance. Here, we utilize a strapped conformal proximity approach rather than a crushing clamp.
-
-## 4. Signal Processing and Feature Extraction
-
-The raw complex scattering parameters ($S_{11}$) are pulled via an ESP32 microcontroller over UART. We extract three primary features:
-
-1. **Resonant Frequency Shift ($\Delta f_r$)**: The frequency at which $S_{11}$ magnitude hits an absolute minimum.
-2. **Phase Angle at Center Frequency ($\theta_{fc}$)**: Readily maps to the capacitive reactance.
-3. **Thermally Compensated Capacitance**: Given the thermal drift of water's dielectric constant (-0.4% per °C), we fuse data from a localized BME280 sensor.
-
-## 5. Machine Learning Regression Model (60% Simulation Ready)
-
-Due to the non-linear relationship introduced by the plant's internal structure and the conformal coating, a closed-form electromagnetic equation is insufficient. We utilize a **Random Forest Regressor** trained via **Leave-One-Plant-Out Cross-Validation (LOPO-CV)**.
-By injecting the mathematical output of the sensor sweep alongside the Plant Type (Hyperparameter) and ambient temperature, the ML model maps the unified dielectric impedance tensor back to genuine Leaf Water Content percentage.
+*(Status: Currently SIMULATED in Python; requires physical validation)*
+Because the fringing field interacts differently based on temperature (water's $\epsilon_r$ drops by ~0.4%/°C) and leaf morphology (cuticle thickness), analytical closed-form equations fail in the field. Our Random Forest pipeline ingests the raw FDC1004 capacitance and ambient BME280 temperature to regress the true Leaf Water Content, abstracting the complex geometry parameters into a learned morphological hyperparameter.

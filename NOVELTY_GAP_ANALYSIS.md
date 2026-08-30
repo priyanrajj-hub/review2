@@ -1,33 +1,15 @@
 # Novelty Gap Analysis
 
-## Current State of the Art
+**WARNING**: This gap analysis must be directly defended alongside the 15 specific papers collected in `LITERATURE_SURVEY.md`. Use this document to demonstrate *why* your project is uniquely publishable compared to those exact papers.
 
-A review of dielectric, microwave, and capacitive sensing literature (2015-2026) for plant water stress monitoring reveals a distinct cluster of studies focused on:
+## 1. Cross-Morphology Dielectric Failure (The Biological Gap)
 
-1. **Thin, homogeneous leaves** (e.g., maize, wheat, potato, canola).
-2. **Controlled environments** (lab benches or climate-controlled greenhouses).
-3. **Contact sensors prone to drift**, rarely exposed to real weathering (rain, dew, harsh sunlight).
+Reviewing standard literature (e.g., papers focusing on Maize or Wheat capacitive sensing), capacitive models treat leaves as uniform dielectric slabs.
 
-## Identified Gaps
+- **The Gap**: None of the 15 verified references account for extreme cuticle variance—specifically the thick, waxy, highly resistive cuticle of **Coconut fronds**, which acts as a massive series dielectric spacer that destroys the sensitivity of standard interdigitated capacitive curves calibrated on thin leaves.
+- **Our Novelty**: By categorizing morphology as a distinct regression parameter (soft/high-transpiration [Tomato] vs waxy/fibrous [Coconut]), this project provides the first unified cross-morphology calibration curve that mathematically compensates for the distance attenuation of fringing electric fields caused by cuticle thickness.
 
-### 1. Cross-Morphology Dielectric Calibration (The Biological Gap)
+## 2. The Unweathered Sensor Fallacy (The Hardware/Field Gap)
 
-There is virtually no systematic dielectric response model that unifies **high-variance soft leaves** (Chilli, Tomato) and **thick, waxy, fibrous leaves** (Coconut).
-
-- **Tomato & Chilli**: Have high transpiration rates and soft cuticles. Capacitive sensors face variable surface contact and local condensation issues.
-- **Coconut**: Have thick, waxy fronds with significant structural biomass that dominates the bulk dielectric constant (lower relative water volume fraction compared to tomato). Existing calibration curves for grasses (wheat/corn) drastically fail here.
-
-**Novel Contribution A**: Establishing a cross-morphology dielectric calibration model that classifies the leaf type (soft vs. fibrous) as a hyperparameter to correctly interpret the microwave impedance shift.
-
-### 2. Field-Hardened Sensoring (The Hardware Gap)
-
-Most existing capacitive/dielectric clamps fail in longitudinal studies due to electrode corrosion or parasitic capacitance induced by morning dew or rain.
-
-- Existing research treats the sensor as ideal.
-- Real-world deployment requires conformal encapsulation (e.g., Parylene-C or specific marine-grade epoxies) that inevitably dampens the sensor's sensitivity.
-
-**Novel Contribution B**: We propose and evaluate an encapsulated, weatherproofed interdigitated capacitor/resonator design, explicitly measuring and compensating for the signal attenuation and drift over time in an outdoor field setting.
-
-## Proposed Strategy for the Paper
-
-Our project will address these two gaps simultaneously, evaluating a low-cost, encapsulated NanoVNA/LDC161x sensor suite across Tomato, Chilli, and Coconut in both controlled and simulated field (weather-exposed) environments, proving stability and morphological adaptability unmatched in current sub-$150 sensing architectures.
+- **The Gap**: Most open-source capacitive studies (e.g., papers utilizing Au@PET or bare copper traces) conduct their validation inside climate-controlled greenhouses. When exposed to outdoor dew point condensation or rain, the parasitic capacitance across bare electrodes causes the FDC1004 readings to saturate or short-circuit, rendering longitudinal outdoor studies impossible.
+- **Our Novelty**: We implement and mathematically characterize the impact of a Parylene-C/Silicone conformal encapsulation layer. Our research will explicitly quantify how much this series dielectric dampens the absolute sensitivity of the FDC1004, and prove that the Random Forest model can successfully recover the Leaf Water Content despite this necessary field-hardening attenuation.
