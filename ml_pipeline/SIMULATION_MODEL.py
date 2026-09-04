@@ -50,7 +50,8 @@ def run_simulation_model():
     plt.plot([40, 90], [40, 90], 'r--', lw=2)
     plt.xlabel("True Leaf Water Content (%)")
     plt.ylabel("Predicted Leaf Water Content (%)")
-    plt.title("SIMULATED DATA (Not Hardware Validated): LWC Prediction")
+    plt.title("SIMULATED — not yet validated against hardware")
+    plt.figtext(0.5, 0.01, "SIMULATED — not yet validated against hardware", ha="center", color="red", fontweight="bold")
     
     # Add watermark to prevent misrepresentation
     plt.text(45, 85, "SIMULATED DATA\nPending Physical Validation", color='red', fontsize=12, fontweight='bold', alpha=0.5)

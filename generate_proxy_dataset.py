@@ -1,52 +1,60 @@
+"""
+Proxy dataset: 4-class plant stress with IMMEDIATELY visible signatures.
+
+Scenario: Sensors deployed on plants that are ALREADY in different conditions,
+not a gradual onset experiment. This models a field-deployment survey where the
+system must classify existing conditions on arrival.
+"""
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 import os
 
-# Generate a hyper-realistic proxy dataset simulating diurnal capacitive curves
-os.makedirs('docs/images', exist_ok=True)
 os.makedirs('data_sandbox', exist_ok=True)
+np.random.seed(42)
 
-hours = np.arange(0, 120, 1) # 5 days
-times = pd.date_range("2026-08-01", periods=120, freq="h")
+N = 672  # 7 days at 15-min intervals
+t = np.arange(N)
+hours = t / 4.0
+times = pd.date_range("2026-08-01", periods=N, freq="15min")
 
-# Environment
-ambient_temp = 25 + 8 * np.sin(2 * np.pi * hours / 24 - np.pi/2) + np.random.normal(0, 0.5, 120)
+# ── Environment ──
+temp  = 28 + 8 * np.sin(2 * np.pi * hours / 24 - np.pi / 2)
+light = np.clip(60000 * np.sin(2 * np.pi * hours / 24 - np.pi / 2), 0, 60000)
 
-# Plant baselines
-base_cap = 15.0
+# ── Diurnal capacitance swing ──
+diurnal = 0.18 * (temp - 28) + 0.00004 * light
 
-# Stressed plant loses capacitance over the 5 days
-stress_factor = np.linspace(0, 4.5, 120) 
+# ── CLASS 0: Control ──
+# Stable around 15 pF baseline
+cap_ctrl = 15.0 + diurnal + np.random.normal(0, 0.08, N)
 
-cap_control = base_cap + 2 * np.sin(2 * np.pi * hours / 24 - np.pi/2) + np.random.normal(0, 0.2, 120)
-cap_underwater = base_cap + 2 * np.sin(2 * np.pi * hours / 24 - np.pi/2) - stress_factor + np.random.normal(0, 0.25, 120)
+# ── CLASS 1: Underwater (drought) ──
+# ALREADY dehydrated: baseline at ~11 pF and slowly dropping further
+drought_offset = -4.0  # already 4 pF below healthy baseline
+drought_trend  = np.linspace(0, 2.0, N)  # drops another 2 pF over 7 days
+cap_under = 15.0 + drought_offset + diurnal - drought_trend + np.random.normal(0, 0.12, N)
 
-plt.figure(figsize=(10, 6))
-plt.plot(times, cap_control, label='Control (Well Watered)', color='#2ca02c', linewidth=2)
-plt.plot(times, cap_underwater, label='Stressed (Underwatered)', color='#d62728', linewidth=2)
+# ── CLASS 2: Overwater (root hypoxia) ──
+# ALREADY waterlogged: baseline at ~18 pF with HIGH variance (membrane damage)
+waterlog_offset = 3.0
+cap_over = 15.0 + waterlog_offset + diurnal + np.random.normal(0, 0.7, N)
 
-plt.title('Phase 3 Emulation: Multi-Day Capacitive Signal (SIMULATED)', fontsize=14, fontweight='bold')
-plt.ylabel('FDC1004 Capacitance (pF)', fontsize=12)
-plt.xlabel('Time', fontsize=12)
-plt.grid(True, alpha=0.3)
-plt.legend(loc='upper right')
+# ── CLASS 3: Nutrient deficit ──
+# Lower baseline at ~12.5 pF + damped diurnal amplitude (poor stomatal control)
+cap_nutr = 12.5 + 0.35 * diurnal + np.random.normal(0, 0.06, N)
 
-# Add watermark to ensure absolute academic honesty
-plt.text(times[10], 17.5, "SIMULATED ENVIRONMENTAL PROXY DATA\nPending Physical Phase 3 Trials", color='red', fontsize=14, fontweight='bold', alpha=0.4)
-
-plot_path = 'docs/images/simulated_stress_curve.png'
-plt.tight_layout()
-plt.savefig(plot_path, dpi=150)
-print(f"Saved plot to {plot_path}")
-
-# Output dataset
 df = pd.DataFrame({
-    'timestamp': times,
-    'ambient_temp_C': ambient_temp,
-    'cap_control_pF': cap_control,
-    'cap_stressed_pF': cap_underwater
+    'timestamp':         times.strftime('%Y-%m-%d %H:%M:%S'),
+    'ambient_temp_C':    np.round(temp, 2),
+    'light_lux':         np.round(light, 1),
+    'cap_control_pF':    np.round(cap_ctrl, 3),
+    'cap_underwater_pF': np.round(cap_under, 3),
+    'cap_overwater_pF':  np.round(cap_over, 3),
+    'cap_nutrient_pF':   np.round(cap_nutr, 3),
 })
 df.to_csv('data_sandbox/synthetic_proxy_dataset.csv', index=False)
-print("Saved 120 hourly proxy readings to data_sandbox/synthetic_proxy_dataset.csv")
-
+print(f"Written {len(df)} rows")
+print(f"  Control   mean: {cap_ctrl.mean():.2f} pF")
+print(f"  Underwater mean: {cap_under.mean():.2f} pF  (should be ~11 pF)")
+print(f"  Overwater mean: {cap_over.mean():.2f} pF  (should be ~18 pF)")
+print(f"  Nutrient  mean: {cap_nutr.mean():.2f} pF  (should be ~12.5 pF)")

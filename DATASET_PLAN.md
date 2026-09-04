@@ -28,3 +28,25 @@ To build the verifiable dataset, we will execute the following physical, hardwar
 3. **Sampling Rate**: Take a 1-minute averaged capacitance read every 6 hours.
 4. **Ground Truth Validation**: Concurrent to the sensor read, use destructive gravimetric sampling. We will punch out a known leaf area, weigh it (Fresh Weight), oven dry at 70Â°C for 48h, and weigh it again (Dry Weight) to calculate true LWC.
 5. **Sensor Matrix**: Record Ambient Temperature (Temp_C) and Relative Humidity (RH) concurrently to build the temperature cross-sensitivity compensation matrix.
+
+
+### Concrete Execution Checklist & Time Estimates
+
+- [ ] **Procurement & Setup (Est. 2 days)**
+  - [ ] Procure N=5 Chilli, N=5 Tomato, N=5 Coconut plants (Total 15 plants)
+  - [ ] Connect FDC1004 to ESP32 via I2C
+  - [ ] Attach Parylene-C coated copper interdigitated electrodes to 1 target leaf per plant
+- [ ] **Baseline Hydration (Est. 3 days)**
+  - [ ] Water all 15 plants fully to field capacity
+  - [ ] Confirm baseline capacitance and steady-state readings
+- [ ] **Dry-Down Phase (7-14 days)**
+  - [ ] Cease all watering on Day 0
+  - [ ] [Every 6 hours] Record 1-minute averaged capacitance, Temp_C, and RH
+  - [ ] [Daily] Punch one small leaf area per plant for ground truth
+  - [ ] [Daily] Measure Fresh Weight (FW) immediately
+- [ ] **Ground Truth Processing (Est. 2 days post-sampling)**
+  - [ ] Oven dry all leaf punches at 70°C for 48h
+  - [ ] Measure Dry Weight (DW) for all samples
+  - [ ] Calculate True LWC = (FW - DW) / FW
+- [ ] **Dataset Assembly (Est. 1 day)**
+  - [ ] Merge Time, Capacitance, Temp_C, RH, and True LWC into final `.csv` dataset

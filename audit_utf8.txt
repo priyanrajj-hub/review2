@@ -1,0 +1,50 @@
+=== HARVARD DATAVERSE DATASET VERIFICATION AUDIT ===
+
+Querying Dataverse for: Tomato Proxy (tomato water stress)
+-> Found target file: Tomatoes and products.tab
+-> Source URL: https://dataverse.harvard.edu/api/access/datafile/11640235
+-> File Size: 138273 bytes
+-> Total Rows: 2148
+-> Top 3 Rows:
+        ID reporter_ISO3  Weight_ForExportAllocation  pop_weight_all weight_source
+0  AFG.1_1           AFG                    0.042653        0.042653           POP
+1  AFG.2_1           AFG                    0.021296        0.021296           POP
+2  AFG.3_1           AFG                    0.034535        0.034535           POP
+
+
+Querying Dataverse for: Chili/Capsicum Proxy (chili water stress)
+-> Found target file: Water&Wastewater_Publications.tab
+-> Source URL: https://dataverse.harvard.edu/api/access/datafile/3207604
+-> File Size: 3282 bytes
+-> Total Rows: 34
+-> Top 3 Rows:
+  Scientific publications - Water & Wastewater;Number of publications;1990;1991;1992;1993;1994;1995;1996;1997;1998;1999;2000;2001;2002;2003;2004;2005;2006;2007;2008;2009;2010;2011;2012;2013;2014;2015;2016;2017
+0                                                                                                                BE;Belgium;7;3;12;14;23;20;26;29;40;38;44;70;68;48;50;68;68;58;66;86;66;87;86;103;115;99;118;112
+1                                                                                                                                          BG;Bulgaria;1;1;1;0;1;10;4;1;3;14;3;1;10;1;1;8;1;2;1;1;3;2;1;2;4;1;8;1
+2                                                                                                                    CZ;Czech Republic;0;0;0;0;22;7;23;3;9;6;10;13;16;14;8;10;14;15;12;17;38;17;20;28;29;52;41;50
+
+
+Querying Dataverse for: Coconut Proxy (coconut water stress)
+-> Found target file: Coconut Oil.tab
+-> Source URL: https://dataverse.harvard.edu/api/access/datafile/11640261
+-> File Size: 55317 bytes
+-> Total Rows: 908
+-> Top 3 Rows:
+        ID reporter_ISO3  Weight_ForExportAllocation  pop_weight_all weight_source
+0  BEL.1_1           BEL                    0.106057        0.106057           POP
+1  BEL.2_1           BEL                    0.578188        0.578188           POP
+2  BEL.3_1           BEL                    0.315754        0.315754           POP
+
+
+Querying Dataverse for: Sap Flow Proxy (sap flow dataset)
+-> Found target file: JPR_replication.tab
+-> Source URL: https://dataverse.harvard.edu/api/access/datafile/7612772
+-> File Size: 4462757 bytes
+-> Total Rows: 21531
+-> Top 3 Rows:
+    respno  refnumb iso3  year  IMFnn  imf85pend  BA2LAB  BA2TOT  cbalab  GDLCODE  gdl_iwi  gdl_gini  gdl_urb  gdl_wemp  gdl_pop  gdl_mru5  gdl_pipewater    gid  mountains_mean  ttime_mean  urban_gc  gem_s  diamprim_s  drug_y  excluded  afcombwt  pardem  pidwin  supdem  supnow  supfut  spamar  sparet  sapknw  sapmin  sapsat  occup  gender  age  educ  unemp  urbrur  medrad  povfoo  povwat  povhth  povinc  scint  sckfin  pfenow  pfepas  pfefut  pfeerd  pfrass  pfreql  pfrfai  pfrall  pfpcr2  pfgpre country
+0  BOT4782     4782  BWA  1999      0        0.0       0       0     0.0  BWAr106     49.3      0.26     61.4       NaN     0.13      52.9           72.3  99055        0.000000    331.1830  0.009259      0           0       0       0.0  0.098322       0       0       3    99.0    99.0       1       4      99      99      99     50       2   38     0      0       1       5       1       0       1       2      2       9       2       2       2       2       4       4       4       3       9       9     BOT
+1  BOT5581     5581  BWA  1999      0        0.0       0       0     0.0  BWAr105     39.8      0.30     54.8       NaN     0.24      66.6           43.3  94011        0.033889    125.7017  0.000000      0           0       0       NaN  0.098322       4       1       3    99.0    99.0       3       1      99      99      99     12       1   35     2      0       2       3       0       2       1       1      4       5       1       2       1       3       6       6       2       9       9       1     BOT
+2  BOT5103     5103  BWA  1999      0        0.0       0       0     0.0  BWAr101     39.9      0.32     41.7       NaN     0.57      79.6           47.0  99055        0.000000    331.1830  0.009259      0           0       0       0.0  0.098322       0       2       1    99.0    99.0       4       1      99      99      99     48      99   44     3      0       2       4       0       0       0       1      2       9       2       3       9       2       4       3       9       3       3       3     BOT
+
+
